@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadLogInView() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LogInActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

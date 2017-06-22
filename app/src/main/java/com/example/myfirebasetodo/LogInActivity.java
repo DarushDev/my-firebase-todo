@@ -71,6 +71,10 @@ public class LogInActivity extends AppCompatActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             } else {
+                                /*Exceptions:
+                                    FirebaseAuthInvalidUserException thrown if the user account corresponding to email does not exist or disabled.
+                                    FirebaseAuthInvalidCredentialsException thrown if the password is wrong.
+                                */
                                 Log.d(TAG, "onComplete: Failed>>>"+ task.getException().getMessage());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LogInActivity.this);
                                 builder.setMessage(task.getException().getMessage())

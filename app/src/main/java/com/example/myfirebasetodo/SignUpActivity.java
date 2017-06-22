@@ -58,6 +58,11 @@ public class SignUpActivity extends AppCompatActivity{
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     } else {
+                                        /*Exceptions:
+                                            FirebaseAuthWeakPasswordException thrown if the password is not strong enough (your password has to be at least 6 characters long)
+                                            FirebaseAuthInvalidCredentialsException thrown if the email address is malformed
+                                            FirebaseAuthUserCollisionException thrown if there already exists an account with the given email
+                                        */
                                         AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
                                         builder.setMessage(task.getException().getMessage())
                                                 .setTitle(R.string.login_error_title)

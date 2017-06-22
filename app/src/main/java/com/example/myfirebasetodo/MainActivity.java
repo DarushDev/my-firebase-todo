@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String mUserId;
     static String TAG = "mytag";
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "mUserId: " + mUserId);
 
             // Set up ListView
-            final ListView listView = (ListView) findViewById(R.id.listView);
+            listView = (ListView) findViewById(R.id.listView);
             final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
             listView.setAdapter(adapter);
 
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Item item = new Item(etTodo.getText().toString());
-                    Log.d(TAG, "onClick: "+item.toString());
+                    Log.d(TAG, "onClick: " + item.toString());
                     //Without using Item object:
                     //mDatabase.child("users").child(mUserId).child("items").push().child("title").setValue(etTodo.getText().toString());
                     //Using Item object:
@@ -100,6 +103,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        // Delete items when clicked
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mDatabase.child("users").child(mUserId).child("items")
+                        .orderByChild("title")
+                        .equalTo((String) listView.getItemAtPosition(position))
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.d(TAG, "onDataChange: "+dataSnapshot.toString());
+                                if (dataSnapshot.hasChildren()) {
+                                    DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                                    firstChild.getRef().removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
 
     }
 

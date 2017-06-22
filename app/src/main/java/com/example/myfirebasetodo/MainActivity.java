@@ -58,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
             final Button button = (Button) findViewById(R.id.addButton);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    mDatabase.child("users").child(mUserId).child("items").push().child("title").setValue(etTodo.getText().toString());
+                    Item item = new Item(etTodo.getText().toString());
+                    Log.d(TAG, "onClick: "+item.toString());
+                    //Without using Item object:
+                    //mDatabase.child("users").child(mUserId).child("items").push().child("title").setValue(etTodo.getText().toString());
+                    //Using Item object:
+                    mDatabase.child("users").child(mUserId).child("items").push().setValue(item);
                     etTodo.setText("");
                 }
             });

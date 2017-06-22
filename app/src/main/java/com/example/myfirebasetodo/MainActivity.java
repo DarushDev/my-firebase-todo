@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        listView = (ListView) findViewById(R.id.listView);
 
         if (mFirebaseUser == null) {
             // Not logged in, launch the Log In activity
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "mUserId: " + mUserId);
 
             // Set up ListView
-            listView = (ListView) findViewById(R.id.listView);
             final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
             listView.setAdapter(adapter);
 
@@ -146,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            return true;
+            mFirebaseAuth.signOut();
+            loadLogInView();
         }
 
         return super.onOptionsItemSelected(item);
